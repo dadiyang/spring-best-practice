@@ -9,3 +9,18 @@
 * REST 接口统一返回 ResultBean\<T\>
 * 通过构造器注入
 * 单元测试
+
+# 启动方式
+
+下载源码：
+
+```shell
+git clone https://github.com/dadiyang/spring-best-practice.git
+cd spring-best-practice
+```
+
+然后直接启动：
+
+`mvn spring-boot:run`
+
+启动之后浏览器打开 http://localhost:8082/swagger-ui.html#/ 可以查看 Swagger 文档

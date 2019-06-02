@@ -39,12 +39,6 @@ public class Account implements Serializable {
     @PositiveOrZero(message = "余额必须大于等于0")
     private Double balance;
 
-    private String username;
-    private String phone;
-    private String email;
-    private String address;
-    private String qq;
-
     public Account(String name, Double balance) {
         this.name = name;
         this.balance = balance;

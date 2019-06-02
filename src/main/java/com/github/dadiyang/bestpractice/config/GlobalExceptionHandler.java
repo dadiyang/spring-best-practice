@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +81,7 @@ public class GlobalExceptionHandler {
             return handleUnknownException(e);
         }
         log.warn("参数校验不通过, {}, msg: {}", logMsg, msg);
-        return new ModelAndView(FORWARD_GLOBAL_ERROR, "msg", msg);
+        return failResultModelAndView(msg);
     }
 
     private String getBindingResultMsg(BindingResult result) {
@@ -100,7 +97,14 @@ public class GlobalExceptionHandler {
     public ModelAndView handleBusinessException(BusinessException t) {
         String logMsg = getErrorLogMsg(t);
         log.error("捕获到业务异常, {}, msg: {}", logMsg, t.getMessage());
-        return new ModelAndView(FORWARD_GLOBAL_ERROR, "msg", t.getMessage());
+        return failResultModelAndView(t.getMessage());
+    }
+
+    private ModelAndView failResultModelAndView(String msg) {
+        Map<String, Object> model = new HashMap<>(4);
+        model.put("msg", msg);
+        model.put("code", ResultBean.FAIL);
+        return new ModelAndView(FORWARD_GLOBAL_ERROR, model);
     }
 
     /**
@@ -131,7 +135,14 @@ public class GlobalExceptionHandler {
     @RequestMapping
     public ResultBean<?> error() {
         String msg = Objects.toString(request.getAttribute("msg"), "出错啦");
-        return new ResultBean<>(-1, msg);
+        String code = Objects.toString(request.getAttribute("code"), null);
+        // 如果有指定 code，则按 code 返回
+        if (StringUtils.isNumeric(code)) {
+            return new ResultBean<>(Integer.parseInt(code), msg);
+        } else {
+            // 否则视为未知异常
+            return ResultBean.unknownError(msg);
+        }
     }
 
     /**
