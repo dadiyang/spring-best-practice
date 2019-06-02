@@ -26,7 +26,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                // 我们只
+                // 设置基包，只扫描这个包及其子包的接口
                 .apis(RequestHandlerSelectors.basePackage("com.github.dadiyang.bestpractice"))
                 .paths(PathSelectors.any())
                 .build();
@@ -35,7 +35,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Spring最佳实践")
-                .description("本项目用于展示个人开发过程中总结的一些最佳实践")
+                .description("本项目用于展示个人在使用Spring开发的过程中总结的最佳实践")
                 .contact(
                         new Contact("dadiyang", "https://www.github.com/dadiyang", "dadiyang@aliyun.com")
                 )
